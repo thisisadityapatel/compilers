@@ -151,12 +151,14 @@ int gettoken() {
 
         // handle
         if (c == '\0') {
-            if (state == 2) return HEX;  // 0h
-            if (state == 3) return BIN;  // 0b
-            if (state == 4) return OCT;  // 0o
-            if (state == 5) return DEC;  // 0d
-            if (state == 1) return DEC;  // 0 alone
-            return ERROR;
+            switch (state) {
+                case 2: return HEX;
+                case 3: return BIN;
+                case 4: return OCT;
+                case 5: return DEC;
+                case 1: return DEC;
+                default: return ERROR;
+            }
         }
 
         int char_class = classify_char(c);
@@ -172,13 +174,22 @@ int gettoken() {
         int next = next_state[state][char_class];
 
         if (next == ERROR) {
-            if (state == 2) { putback_char(c); return HEX; }
-            if (state == 3) { putback_char(c); return BIN; }
-            if (state == 4) { putback_char(c); return OCT; }
-            if (state == 5) { putback_char(c); return DEC; }
-            return ERROR;
+            switch (state) {
+                case 2:
+                    putback_char(c);
+                    return HEX;
+                case 3:
+                    putback_char(c);
+                    return BIN;
+                case 4:
+                    putback_char(c);
+                    return OCT;
+                case 5:
+                    putback_char(c);
+                    return DEC;
+                default: return ERROR;
+            }
         }
-
         state = next;
     }
 
