@@ -171,6 +171,7 @@ int gettoken() {
             continue;
         }
 
+        // main table
         int next = next_state[state][char_class];
 
         if (next == ERROR) {
